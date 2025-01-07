@@ -1,7 +1,11 @@
 app-id: eu.cichy1173.tabela
 runtime: org.kde.Platform
-runtime-version: '6.6'
+runtime-version: '6.8'
 sdk: org.kde.Sdk
+base: io.qt.PySide.BaseApp
+base-version: '6.8'
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
 command: tabela
 finish-args:
   - --share=ipc
@@ -10,42 +14,7 @@ finish-args:
   - --device=dri
   - --filesystem=xdg-documents
 
-sdk-extensions:
-  - org.freedesktop.Sdk.Extension.llvm16
-build-options:
-    append-path: /usr/lib/sdk/llvm16/bin
-    prepend-ld-library-path: /usr/lib/sdk/llvm16/lib
-
 modules:
-  - name: qt-include
-    # https://bugreports.qt.io/projects/PYSIDE/issues/PYSIDE-787
-    buildsystem: simple
-    build-commands:
-      - mkdir -p /app/include/qt
-      - cp -R /usr/include/Qt* /app/include/qt
-    cleanup:
-      - /include
-
-  - name: PySide6
-    buildsystem: cmake-ninja
-    builddir: true
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DBUILD_TESTS=OFF
-    sources:
-      - type: archive
-        url: https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.5.1.1-src/pyside-setup-everywhere-src-6.5.1.1.tar.xz
-        sha256: 9741a06f0b7d4b2168818448134bc7e96ddb5efb846a3915b4177ba4159b5b78
-      - type: shell
-        commands:
-          # use qt-include
-          - sed -i 's|\(--include-paths=\)|\1/app/include/qt:|' sources/pyside6/cmake/Macros/PySideModules.cmake
-          # fix python module search path
-          - sed -i '/--sys-path\b/ a "${pysidebindings_BINARY_DIR}/.."' sources/pyside6/cmake/Macros/PySideModules.cmake
-    cleanup:
-      - /plugins
-      - /include
-      - /bin
   - name: tabela
     buildsystem: simple
     build-commands:
@@ -59,3 +28,6 @@ modules:
         url: https://codeberg.org/cichy1173/tabela-flatpak.git
         tag: v1.0.9.3
         commit: 2a451163ff6a22b79c7afc2f7a5c71c900a66f0c
+        x-checker-data:
+          - type: git
+            tag-pattern: v([\d.]+)$
