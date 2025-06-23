@@ -2,7 +2,6 @@ app-id: eu.cichy1173.tabela
 runtime: org.kde.Platform
 runtime-version: '6.9'
 sdk: org.kde.Sdk
-sdk-version: '6.9'
 base: io.qt.PySide.BaseApp
 base-version: '6.9'
 build-options:
