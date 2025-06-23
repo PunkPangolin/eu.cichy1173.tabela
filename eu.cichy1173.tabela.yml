@@ -33,5 +33,5 @@ modules:
         tag: v1.0.9.3
         commit: 2a451163ff6a22b79c7afc2f7a5c71c900a66f0c
         x-checker-data:
-          - type: git
-            tag-pattern: v([\d.]+)$
+          type: git
+          tag-pattern: ^v([\d.]+)$
